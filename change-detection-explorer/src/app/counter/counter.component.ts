@@ -1,37 +1,27 @@
-import { Component, inject, NgZone, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
+
+import { InfoMessageComponent } from '../info-message/info-message.component';
 
 @Component({
   selector: 'app-counter',
   standalone: true,
-  imports: [],
   templateUrl: './counter.component.html',
-  styleUrl: './counter.component.css'
+  styleUrl: './counter.component.css',
+  imports: [InfoMessageComponent],
 })
-export class CounterComponent implements OnInit {
-
+export class CounterComponent {
   count = signal(0);
-
-  private zone = inject(NgZone);
 
   get debugOutput() {
     console.log('[Counter] "debugOutput" binding re-evaluated.');
     return 'Counter Component Debug Output';
   }
 
-  ngOnInit(): void {
-    setTimeout(() => {
-      this.count.set(0);
-    }, 4000);
+  onDecrement() {
+    this.count.update((prevCount) => prevCount - 1);
+  }
 
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        console.log('Timer expired from run outside angular');
-      }, 9000);
-    });
-
-    setTimeout(() => {
-      console.log('Timer expired');
-    }, 5000);
-  };
-
+  onIncrement() {
+    this.count.update((prevCount) => prevCount + 1);
+  }
 }
